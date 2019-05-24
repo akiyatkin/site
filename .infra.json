@@ -1,5 +1,6 @@
 {
 	"conf":"akiyatkin\\site\\Site",
 	"cachedir":"!site/",
+	"dir": "~site/",
 	"update":"update.php"
 }
