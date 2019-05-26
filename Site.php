@@ -41,6 +41,7 @@ class Site {
 					$fd = $group['childs'][$nick];
 				} else {
 					$fd = array();
+					$fd['num'] = $info['num'];
 					$fd['nick'] = $nick;
 					$fd['name'] = $info['name'];
 					$fd['files'] = [];
@@ -55,6 +56,7 @@ class Site {
 				} else {
 					$fd = array();
 					$fd['nick'] = $nick;
+					$fd['num'] = $info['num'];
 					$fd['name'] = $info['name'];
 					$fd['files'] = [];
 					$fd['src'] = [];
@@ -169,11 +171,18 @@ class Site {
 				if (empty($item['json'])) $item['json'] = $group['json'];
 				if (empty($item['tpl'])) $item['tpl'] = $group['tpl'];
 			});
-
+			Site::runGroups($data, function (&$group, $i, &$parent) {
+				if (!empty($group['data']) || !empty($group['childs'])) return;
+				$parent['data'][$i] = $parent['childs'][$i];
+				unset($parent['childs'][$i]);
+				unset($group['data']);
+				unset($group['childs']);
+			});
 			//Схлопываем ключи
 			Site::runGroups($data, function (&$group) {
 				$group['childs'] = array_values($group['childs']);
 				$group['data'] = array_values($group['data']);
+				Load::sort($group['data'],'ascending');
 			});
 			Site::runItems($data, function (&$item) use (&$index) {
 				if (!isset($item['src'])) return;
