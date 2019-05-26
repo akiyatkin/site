@@ -38,7 +38,7 @@ return Rest::get( function () {
 		if (isset($item['data'])) {
 			foreach ($item['data'] as $ch) {
 				$layer['childs'][$index[$ch]['nick']] = [
-					"tpl" => "-site/get/".$ch
+					"external" => "-site/layer/".$ch.'?json=1'
 				];
 			}
 		}
