@@ -11,6 +11,7 @@
 		"infrajs/load":"~1",
 		"infrajs/once":"~1",
 		"infrajs/access":"~1",
+		"infrajs/excel":"~1",
 		"infrajs/sequence":"~1",
 		"infrajs/ans":"~1"
 	}

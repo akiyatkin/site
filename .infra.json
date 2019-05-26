@@ -1,6 +1,5 @@
 {
 	"conf":"akiyatkin\\site\\Site",
-	"cachedir":"!site/",
 	"dir": "~site/",
-	"update":"update.php"
+	"first_article_to_group":true
 }

@@ -16,19 +16,7 @@ return Rest::get( function () {
 	if ($path) {
 		if (isset($index[$path])) {
 			$res = $index[$path];
-			/*if (isset($res['src'])) {
-				$res += Rubrics::info($res['src']);
-				$res['text'] = Rubrics::article($res['src']);
-			}
-			return Ans::ans($res);*/
-			if (isset($res['src'])) {
-				$text = Rubrics::article($res['src']);
-				echo $text;
-				return;
-			} else {
-				echo '';	
-			}
-
+			return Ans::ans($res);
 		} else {
 			return http_response_code(404);
 		}
