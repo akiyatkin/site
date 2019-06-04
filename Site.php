@@ -163,6 +163,7 @@ class Site {
 					$item['path'] = $group['path'].'/'.$item['nick'];
 					$item['parent'] = $group['path'];
 				} else {
+					$item['parent'] = '';
 					$item['path'] = $item['nick'];
 				}
 				if (isset($item['src'])) $item['src'] = $item['src'][0];
