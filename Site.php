@@ -95,7 +95,6 @@ class Site {
 	public static function data () {
 		$data = Access::func(function(){
 			$data = Site::scan(Site::$conf['dir']);
-
 			//Определяем статью для папки
 			Site::runGroups($data, function (&$group, $nick, &$parent) {
 				if (isset($parent['data'][$nick])) {
@@ -150,6 +149,10 @@ class Site {
 						$item['files'][] = $d;
 					}
 				}
+				if (isset($item['images'])) {
+					$item['image'] = $item['images'][0];
+					if (sizeof($item['images'])==1) unset($item['images']);
+				}
 				if (!$item['files']) unset($item['files']);
 				else $item['files'] = array_values($item['files']);
 			});
@@ -172,13 +175,36 @@ class Site {
 				if (empty($item['json'])) $item['json'] = $group['json'];
 				if (empty($item['tpl'])) $item['tpl'] = $group['tpl'];
 			});
+			
+
 			Site::runGroups($data, function (&$group, $i, &$parent) {
+				//if (!empty($group['src']) || !empty($group['data']) || !empty($group['childs'])) return;
+				$group['items'] = array_merge($group['childs'],$group['data']);
+				Load::sort($group['items'],'ascending');
+				$group['items'] = array_map(function ($item){
+					return $item['path'];
+				}, $group['items']);
+				
 				if (!empty($group['data']) || !empty($group['childs'])) return;
 				$parent['data'][$i] = $parent['childs'][$i];
+				
 				unset($parent['childs'][$i]);
 				unset($group['data']);
 				unset($group['childs']);
 			});
+		
+			/*Site::runGroups($data, function (&$group, $i, &$parent) {
+				if (!empty($group['src']) && (!empty($group['data']) || !empty($group['childs']))) {
+
+				} else {
+					return;
+				}
+				//if (!empty($group['data']) || !empty($group['childs'])) return;
+				$parent['data'][$i] = $parent['childs'][$i];
+				unset($parent['childs'][$i]);
+				unset($group['data']);
+				unset($group['childs']);
+			});*/
 			//Схлопываем ключи
 			Site::runGroups($data, function (&$group) {
 				$group['childs'] = array_values($group['childs']);
@@ -188,7 +214,11 @@ class Site {
 			Site::runItems($data, function (&$item) use (&$index) {
 				if (!isset($item['src'])) return;
 				$res = Rubrics::info($item['src']);
-				if (isset($res['heading'])) $item['heading'] = $res['heading'];
+				if (isset($res['heading'])) {
+					$item['heading'] = $res['heading'];
+					$item['name'] = $res['heading'];
+				}
+				
 				if (isset($res['preview'])) $item['preview'] = $res['preview'];
 				if (isset($res['images'])) $item['image'] = $res['images'][0]['src'];
 			});

@@ -1,5 +1,6 @@
 {
 	"conf":"akiyatkin\\site\\Site",
+	"dependencies":"ydisk",
 	"dir": "~site/",
 	"first_article_to_group":true
 }
