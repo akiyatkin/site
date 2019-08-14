@@ -5,6 +5,7 @@ use infrajs\rest\Rest;
 use infrajs\ans\Ans;
 use infrajs\load\Load;
 use infrajs\path\Path;
+use infrajs\sequence\Sequence;
 use infrajs\access\Access;
 use infrajs\config\Config;
 use akiyatkin\fs\FS;
@@ -19,6 +20,10 @@ return Rest::get( function () {
 	} else {
 		$group = false;
 	}
+	if ($path == 'index') $path = '';
+	
+	
+
 	if(empty($group['items'])) {
 		if (!empty($group['parent'])) {
 			$gr = $index[$group['parent']];
@@ -36,6 +41,36 @@ return Rest::get( function () {
 		return $index[$path];
 	}, $gr['items']);
 	
+	$bread = Sequence::right($path,'/');
+	
+
+	$crumbs = [];
+
+	/*while (sizeof($bread)) {
+		$p = Sequence::short($bread, '/');
+		if (!$p) $p = 'index';
+		$crumb = array_intersect_key($index[$p], array_flip(['name','path']));
+		array_unshift($crumbs, $crumb);
+		$b = array_pop($bread);
+	};*/
+
+	do {
+		$p = Sequence::short($bread, '/');
+		if (!$p) $p = 'index';
+		if (!isset($index[$p])) {
+			$crumb = [
+				'path' => $p,
+				'name' => 'Страница <b>'.$p.'</b> не найдена'
+			];
+		} else {
+			$crumb = array_intersect_key($index[$p], array_flip(['name','path']));
+		}
+
+		array_unshift($crumbs, $crumb);
+
+	} while ($b = array_pop($bread));
+	$group['crumbs'] = $crumbs;	
+
 	return Ans::ans($group);
 });
 
