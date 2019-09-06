@@ -220,7 +220,7 @@ class Site {
 				}
 				
 				if (isset($res['preview'])) $item['preview'] = $res['preview'];
-				if (isset($res['images'])) $item['image'] = $res['images'][0]['src'];
+				if (isset($res['images']) && empty($item['image'])) $item['image'] = $res['images'][0]['src'];
 			});
 			return $data;
 		});
